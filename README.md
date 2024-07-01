@@ -1,5 +1,7 @@
 Realice con exito el backend cumplo con toda las consignas. 
 
+swagger: http://localhost:3000/api-docs/#/
+
 
 USUARIO: eliasalasia@gmail.com CONTRASEÑA: Elias123
 USUARIO: lionelmessi@gmail.com  CONTRASEÑA: Campeon23
