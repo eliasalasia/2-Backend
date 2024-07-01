@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { SECRET_KEY } from '../config/config.js';
 
-// Middleware para verificar el token JWT
 export const verifyToken = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -19,6 +18,4 @@ export const verifyToken = (req, res, next) => {
     }
 };
 
-
-
-export default verifyToken; 
+export default verifyToken;

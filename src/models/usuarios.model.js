@@ -1,32 +1,26 @@
 import pool from '../config/db.js';
 
-export const registerUser = async ({ email, password }) => {
-    const user = { email, password };
-    await pool.query('INSERT INTO usuarios SET ?', user);
-};
+// Función para actualizar el perfil del usuario en la base de datos
+export const updateUserPerfil = async (email, { perfil, name, phone, biografia }) => {
+    try {
+        const updates = {};
+        if (perfil) updates.perfil = perfil;
+        if (name) updates.name = name;
+        if (phone) updates.phone = phone;
+        if (biografia) updates.biografia = biografia; // Corregir el nombre del campo 'biografia'
 
-export const findUserByEmail = async (email) => {
-    const [rows] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
-    return rows[0];
-};
+        const fieldsToUpdate = Object.keys(updates).map(key => `${key} = ?`).join(', ');
+        const valuesToUpdate = Object.values(updates);
+        valuesToUpdate.push(email);
 
-export const updateUserProfile = async (email, { perfil, name, phone, biografia }) => {
-    const updates = {};
-    if (perfil) updates.perfil = perfil;
-    if (name) updates.name = name;
-    if (phone) updates.phone = phone;
-    if (biografia) updates.biografia = biografia;
+        if (fieldsToUpdate.length > 0) {
+            await pool.query(`UPDATE usuarios SET ${fieldsToUpdate} WHERE email = ?`, valuesToUpdate);
+        }
 
-    const fieldsToUpdate = Object.keys(updates).map(key => `${key} = ?`).join(', ');
-    const valuesToUpdate = Object.values(updates);
-    valuesToUpdate.push(email);
-
-    if (fieldsToUpdate.length > 0) {
-        await pool.query(`UPDATE usuarios SET ${fieldsToUpdate} WHERE email = ?`, valuesToUpdate);
+        // Si llega hasta aquí, la actualización fue exitosa
+        return true;
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        throw error; // Propaga el error para manejarlo en el controlador
     }
-};
-
-export const getUserInfo = async (email) => {
-    const [rows] = await pool.query('SELECT * FROM usuarios WHERE email = ?', [email]);
-    return rows[0];
 };
